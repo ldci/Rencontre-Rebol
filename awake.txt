@@ -1,0 +1,21 @@
+Voilà les principes généraux :
+----------------------------
+
+- A un port, on définit une fonction "awake"
+- On ajoute le ports à la liste des port en attente (system/ports/wait-list)
+- On set le mode "no-wait" doit être false sinon les fonctions "awake" sont appelés continuellement
+- On appelle la fonction wait [] pour que les fonctions "awake" soient appelées lorsqu'un événement arrive sur les ports
+- Lors de la fermeture d'un port, il faut l'enlever de la liste des ports en attente
+- Toutes les fonctions "awake" doivent retourner FALSE ou NONE, sinon le wait [] se termine
+- Dans le cas d'un port en attente de connection,
+- la fonction "awake" est appellée à chaque nouvelle connection
+- Dans le cas des autres ports,
+- la fonction "awake" est appelée chaque fois que des données sont arrivées
+- lorsque le port est fermé à l'autre bout de la ligne
+
+Avantages de la méthode
+-----------------------
+- Il n'est pas nécessaire de programmer une boucle d'attente sur les ports
+- On n'est pas en conflit avec "view" qui utilise aussi wait (voir le source de do-events)
+- Il est moins nécessaire de programmer le traitement des erreurs
+- La fermeture d'un port à l'autre bout de la ligne est bian traité (on a pas de read qui attendent jusqu'au timeout)
